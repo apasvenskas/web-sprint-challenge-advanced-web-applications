@@ -5,6 +5,7 @@ import LoginForm from './LoginForm'
 import Message from './Message'
 import ArticleForm from './ArticleForm'
 import Spinner from './Spinner'
+import axios from 'axios'
 
 const articlesUrl = 'http://localhost:9000/api/articles'
 const loginUrl = 'http://localhost:9000/api/login'
@@ -31,6 +32,29 @@ export default function App() {
 
   const login = ({ username, password }) => {
     // ✨ implement
+    setMessage('');
+    setSpinnerOn(true);
+
+    //post to login api endpoint
+    axios.post(loginUrl, {username, password})
+      .then(res => {
+        localStorage.setItem('token', res.data.token);
+
+        //action to update Redux store
+        dispatch(loginSucces());
+        dispatch(setUserToken(res.data.token));
+
+        //Fetch user data
+        return dispatch(fetchUser());
+      })
+      .then(() => {
+        setSpinnerOn(false);
+        redirectToArticles();
+      })
+      .catch(err => {
+        alert('Invalid username or password');
+        setSpinnerOn(false);
+      })
     // We should flush the message state, turn on the spinner
     // and launch a request to the proper endpoint.
     // On success, we should set the token to local storage in a 'token' key,
@@ -38,7 +62,7 @@ export default function App() {
     // to the Articles screen. Don't forget to turn off the spinner!
   }
 
-  const getArticles = () => {
+  const getArticles = ()   => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
     // and launch an authenticated request to the proper endpoint.
