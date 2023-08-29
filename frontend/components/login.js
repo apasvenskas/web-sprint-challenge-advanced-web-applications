@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const loginUrl = "http://localhost:9000/api/login";
 
 const useLogin = () => {
   const [message, setMessage] = useState("");
   const [spinnerOn, setSpinnerOn] = useState(false);
+  const navigate = useNavigate()
 
   const login = async ({ username, password }) => {
     setSpinnerOn(true);
@@ -15,6 +17,9 @@ const useLogin = () => {
       localStorage.setItem("token", res.data.token);
       setMessage(res.data.message);
       setSpinnerOn(false);
+      navigate("/articles");
+      // const message = `Here are your articles, ${username}!`;
+      // setMessage(message);
     } else {
       setMessage(res.data.message);
       setSpinnerOn(false);
