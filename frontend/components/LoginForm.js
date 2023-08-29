@@ -1,26 +1,28 @@
 import React, { useState } from 'react'
 import PT from 'prop-types'
-import App from './App'
+import useLogin from './login'
+
 
 const initialFormValues = {
   username: '',
   password: '',
 }
-export default function LoginForm(props) {
-  const [values, setValues] = useState(initialFormValues)
-  // ✨ where are my props? Destructure them here
-  // const { login } = props
 
+export default function LoginForm(props) {
+  // ✨ where are my props? Destructure them here
+  const [values, setValues] = useState(initialFormValues)
+  const {login, message, spinnerOn} = useLogin();
+ 
   const onChange = evt => {
-    const { id, value } = evt.target
-    setValues({ ...values, [id]: value })
+    const { id, value } = evt.target;
+    setValues({ ...values, [id]: value });
   }
 
-  const onSubmit = evt => {
-    evt.preventDefault()
+  const onSubmit = (e) => {
+    e.preventDefault()
     // ✨ implement
     login(values)
-    setValues(initialFormValues)
+    // setValues(initialFormValues)
   }
 
   const isDisabled = () => {
@@ -28,15 +30,16 @@ export default function LoginForm(props) {
     // Trimmed username must be >= 3, and
     // trimmed password must be >= 8 for
     // the button to become enabled
-    const trimmedUsername = values.username.trim()
-    const trimmedPassword = values.password.trim()
-    return trimmedUsername < 3 || trimmedPassword.length < 8
-  }
+    const trimmedUsername = values.username.trim();
+    const trimmedPassword = values.password.trim();
+    return trimmedUsername < 3 || trimmedPassword.length <8;
+  };
 
   return (
     <form id="loginForm" onSubmit={onSubmit}>
       <h2>Login</h2>
-      {}
+      {message && <p>{message}</p>}
+      {spinnerOn && <p>Loading...</p>}
       <input
         maxLength={20}
         value={values.username}

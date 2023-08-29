@@ -19,7 +19,7 @@ export default function App() {
 
   // ✨ Research `useNavigate` in React Router v.6
   const navigate = useNavigate()
-  const redirectToLogin = () => { navigate("/") }
+  const redirectToLogin = () => { navigate("/")}
   const redirectToArticles = () => { navigate("/articles")}
 
   const logout = () => {
@@ -30,37 +30,6 @@ export default function App() {
     // using the helper above.
   }
 
-  const login = ({ username, password }) => {
-    // ✨ implement
-    setMessage('');
-    setSpinnerOn(true);
-
-    //post to login api endpoint
-    axios.post(loginUrl, {username, password})
-      .then(res => {
-        localStorage.setItem('token', res.data.token);
-
-        //action to update Redux store
-        dispatch(loginSucces());
-        dispatch(setUserToken(res.data.token));
-
-        //Fetch user data
-        return dispatch(fetchUser());
-      })
-      .then(() => {
-        setSpinnerOn(false);
-        redirectToArticles();
-      })
-      .catch(err => {
-        alert('Invalid username or password');
-        setSpinnerOn(false);
-      })
-    // We should flush the message state, turn on the spinner
-    // and launch a request to the proper endpoint.
-    // On success, we should set the token to local storage in a 'token' key,
-    // put the server success message in its proper state, and redirect
-    // to the Articles screen. Don't forget to turn off the spinner!
-  }
 
   const getArticles = ()   => {
     // ✨ implement
@@ -115,3 +84,5 @@ export default function App() {
     </>
   )
 }
+
+
