@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import PT from 'prop-types'
-import useLogin from './login'
+import useLogin from './actions/login'
+import Message from './Message'
+import Spinner from './Spinner'
 
 
 const initialFormValues = {
@@ -8,25 +10,11 @@ const initialFormValues = {
   password: '',
 }
 
-const loginRedirect = async ({ username, password }) => {
-  setSpinnerOn(true);
-  const res = await axios.post(loginUrl, { username, password });
-
-  if (res.status === 200) {
-    localStorage.setItem("token", res.data.token);
-    setMessage(res.data.message);
-    setSpinnerOn(false);
-    navigate("/articles");
-  } else {
-    setMessage(res.data.message);
-    setSpinnerOn(false);
-  }
-};
-
 export default function LoginForm(props) {
   // ✨ where are my props? Destructure them here
   const [values, setValues] = useState(initialFormValues)
-  const {login, message, spinnerOn} = useLogin();
+  const {login} = useLogin();
+  const {message, spinnerOn} = props
  
   const onChange = evt => {
     const { id, value } = evt.target;
@@ -38,7 +26,6 @@ export default function LoginForm(props) {
     // ✨ implement
     login(values)
     // setValues(initialFormValues)
-    setMessage(`Here are your articles, ${values.username}`);
   }
 
   const isDisabled = () => {
