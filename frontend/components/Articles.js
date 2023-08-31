@@ -5,10 +5,10 @@ import getArticles from './actions/getArticles'
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
-  const {
-    articles,
-    getArticles,
-  } = props
+  // const {
+  //   articles,
+  //   getArticles,
+  // } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
   const [token, setToken] = useState(null)
