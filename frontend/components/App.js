@@ -45,8 +45,8 @@ export default function App() {
     // and launch an authenticated request to the proper endpoint.
     axios.get(articlesUrl, {
       headers: {
-        'Auhorization': localStorage.getItem('token')
-      }
+        Authorization: localStorage.getItem('token')
+      },
     })    
     // On success, we should set the articles in their proper state and
     // put the server success message in its proper state.
@@ -59,14 +59,17 @@ export default function App() {
     })
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
+    .catch((error) => {
+      console.error(error);
     if(error.response.status === 401) {
-        navigate("/login");
+      redirectToLogin()
     } else {
       setMessage(error.response.data.message)
     }
     // Don't forget to turn off the spinner!
     setSpinnerOn(false)
-  }
+  })
+}
   
 
       const login = async ({ username, password }) => {
@@ -82,7 +85,7 @@ export default function App() {
           // setMessage(message);
         } else {
           setMessage(res.data.message);
-          setSpinnerOn(false);
+          setSpinnerOn(false)
         }
       };
 
@@ -107,7 +110,7 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner l />
+      <Spinner spinnerOn={spinnerOn}/>
       <Message message={message} />
       <button id="logout" onClick={logout}>Logout from app</button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}> {/* <-- do not change this line */}
@@ -118,10 +121,11 @@ export default function App() {
         </nav>
         <Routes>
           <Route path="/" element={<LoginForm login={login}/>} />
+          <Route path='login' element={<LoginForm login={login}/>}/>
           <Route path="articles" element={
             <>
               <ArticleForm postArticle={postArticle} updateArticle={updateArticle} deleteArticle={deleteArticle}/>
-              <Articles getArticles={getArticles}/>
+              <Articles getArticles={getArticles} deleteArticle={deleteArticle} updateArticle={updateArticle} postArticle={postArticle}/>
             </>
           } />
         </Routes>
