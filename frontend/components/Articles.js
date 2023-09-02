@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import PT from 'prop-types';
 import axiosWithAuth from '../axios';
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
    const {
+    // articles = [],
     articles,
     getArticles,
+    setCurrentArticleId,
+    currentArticleId
  } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
-  const [token, setToken] = useState(null)
+  const token = localStorage.getItem('token')||props.token
+  
+  const navigate = useNavigate()
 
   if(!token){
     return <Navigate to="/login" />
@@ -23,11 +28,19 @@ export default function Articles(props) {
   }, [])
 
   const updateArticle = (articleId) => {
-    setToken(articleId)
+    setCurrentArticleId(articleId)
+    navigate('/edit-article')
   }
 
   const deleteArticle = (articleId) => {
-    getArticles()
+    axiosWithAuth()
+    .delete(`/articles/${articleId}`)
+    .then(() => {
+      getArticles()
+    })
+    .catch((err) => {
+      console.log(err)
+    })
   }
 
   return (
@@ -36,7 +49,7 @@ export default function Articles(props) {
     <div className="articles">
       <h2>Articles</h2>
       {
-        articles.length ? articles.map(art => {
+        articles && articles.length ? articles.map((art) => {
             return (
               <div className="article" key={art.article_id}>
                 <div>
