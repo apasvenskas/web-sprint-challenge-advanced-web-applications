@@ -10,7 +10,7 @@ export default function Articles(props) {
     articles,
     getArticles,
     setCurrentArticleId,
-    currentArticleId
+    currentArticleId,
  } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
@@ -48,10 +48,10 @@ export default function Articles(props) {
     // and use the articles prop to generate articles
     <div className="articles">
       <h2>Articles</h2>
-      {
-        articles && articles.length ? articles.map((art) => {
+      {articles?.length > 0 ? (
+        articles.map((art) => {
             return (
-              <div className="article" key={art.article_id}>
+              <div className="article" key={art.articleId}>
                 <div>
                   <h3>{art.title}</h3>
                   <p>{art.text}</p>
@@ -62,12 +62,14 @@ export default function Articles(props) {
                   <button disabled={currentArticleId !== art.article_id} onClick={deleteArticle}>Delete</button>
                 </div>
               </div>
+            )}
             )
-          }) : 'No articles yet'
-      }
+        ):(
+          <p>No articles yet</p>
+        )}
     </div>
-  )
-}
+  );
+        }
 
 // 🔥 No touchy: Articles expects the following props exactly:
 Articles.propTypes = {

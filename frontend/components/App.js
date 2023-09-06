@@ -6,6 +6,8 @@ import Message from "./Message";
 import ArticleForm from "./ArticleForm";
 import Spinner from "./Spinner";
 import axios from "axios";
+import axiosWithAuth from "../axios";
+
 
 const articlesUrl = "http://localhost:9000/api/articles";
 const loginUrl = "http://localhost:9000/api/login";
@@ -90,11 +92,26 @@ export default function App() {
     }
   };
 
-  const postArticle = (article) => {
+  const postArticle = async (article) => {
     // ✨ implement
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
+    const axios = axiosWithAuth();
+    try {
+      const response = await axios.post(`http://localhost:9000/api/articles`, article);
+      if (response.status === 201) {
+        return response.data;
+      } else {
+        throw new Error(`Unexpected status code: ${response.data}`);
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.status === 401) {
+      } else {
+        return error.message;
+      }
+    }
   };
 
   const updateArticle = ({ article_id, article }) => {
@@ -134,15 +151,19 @@ export default function App() {
             element={
               <>
                 <ArticleForm
-                  postArticle={postArticle}
+                  article={articles}
                   updateArticle={updateArticle}
                   deleteArticle={deleteArticle}
+                  setCurrentArticleId={setCurrentArticleId}
+                  currentArticle={currentArticleId}
                 />
                 <Articles
                   getArticles={getArticles}
                   deleteArticle={deleteArticle}
                   updateArticle={updateArticle}
                   postArticle={postArticle}
+                  setCurrentArticleId={setCurrentArticleId}
+                  currentArticleId={currentArticleId}
                 />
               </>
             }
