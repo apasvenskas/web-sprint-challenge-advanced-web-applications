@@ -46,10 +46,15 @@ export default function App() {
     // We should flush the message state, turn on the spinner
     setMessage(""), setSpinnerOn(true);
     // and launch an authenticated request to the proper endpoint.
+    const token = localStorage.getItem("token");
+    if (!token) {
+      redirectToLogin();
+      return;
+    }
     axios
       .get(articlesUrl, {
         headers: {
-          Authorization: localStorage.getItem("token"),
+          Authorization: `Bearer ${token}`,
         },
       })
       // On success, we should set the articles in their proper state and
@@ -108,6 +113,7 @@ export default function App() {
     } catch (error) {
       console.log(error);
       if (error.response && error.response.status === 401) {
+        redirectToLogin();
       } else {
         return error.message;
       }
@@ -156,6 +162,7 @@ export default function App() {
                   deleteArticle={deleteArticle}
                   setCurrentArticleId={setCurrentArticleId}
                   currentArticle={currentArticleId}
+                  postArticle={postArticle}
                 />
                 <Articles
                   getArticles={getArticles}

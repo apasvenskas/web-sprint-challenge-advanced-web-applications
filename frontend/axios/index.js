@@ -4,7 +4,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 const authLogic = (failedRequest) => 
     axios
-    .post("/auth/refresh", {
+    .post("http://localhost:9000/auth/refresh", {
         refreshToken: localStorage.getItem("refreshToken"),
     })
     .then((tokenRefreshResponse) => {
@@ -20,9 +20,9 @@ const axiosWithAuth = () => {
     const token = localStorage.getItem("token");
 
     return axios.create({
-        baseURL: "/api",
+        baseURL: "http://localhost:9000/api",
         headers: {
-            Authorization: token ? `Bearer ${token}` : "",
+            Authorization: token ? `Bearer ${token}` : null,
         },
     });
 };
