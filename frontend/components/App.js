@@ -44,58 +44,61 @@ export default function App() {
   const getArticles = () => {
     // ✨ implement
     // We should flush the message state, turn on the spinner
-    setMessage(""), setSpinnerOn(true);
     // and launch an authenticated request to the proper endpoint.
-    const token = localStorage.getItem("token");
-    if (!token) {
-      redirectToLogin();
-      return;
-    }
-    axios
-      .get(articlesUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    // On success, we should set the articles in their proper state and
+    // put the server success message in its proper state.
+    // If something goes wrong, check the status of the response:
+    // if it's a 401 the token might have gone bad, and we should redirect to login.
+    // Don't forget to turn off the spinner!
+    setSpinnerOn(true)
+    const token = localStorage.getItem('token')
+    setMessage('')
+    axios.get(articlesUrl, {
+      headers: {
+        Authorization: token
+      } 
+    })
+      .then(res => {
+        setMessage(res.data.message)
+        setArticles(res.data.articles)
       })
-      // On success, we should set the articles in their proper state and
-      // put the server success message in its proper state.
-      .then((response) => {
-        if (response.status === 200) {
-          setArticles(response.data);
-          setMessage("Article Fetched Succesfully!");
+      .catch(err => {
+        setMessage(err?.response?.data?.message || 'Something bad happened')
+        if (err.response.status == 401) {
+          redirectToLogin()
         }
-        setSpinnerOn(false);
       })
-      // If something goes wrong, check the status of the response:
-      // if it's a 401 the token might have gone bad, and we should redirect to login.
-      .catch((error) => {
-        console.error(error);
-        if (error.response.status === 401) {
-          redirectToLogin();
-        } else {
-          setMessage(error.response.data.message);
-        }
-        // Don't forget to turn off the spinner!
-        setSpinnerOn(false);
-      });
-  };
+      .finally(() => {
+        setSpinnerOn(false)
+      })
+      console.log('1', token); 
+  }
+
 
   const login = async ({ username, password }) => {
-    setSpinnerOn(true);
-    const res = await axios.post(loginUrl, { username, password });
+    // ✨ implement
+    // We should flush the message state, turn on the spinner
+    // and launch a request to the proper endpoint.
+    // On success, we should set the token to local storage in a 'token' key,
+    // put the server success message in its proper state, and redirect
+    // to the Articles screen. Don't forget to turn off the spinner!
+    setSpinnerOn(true)
+    setMessage('')
+    axios.post(loginUrl, { username, password })
+      .then(res => {
+        window.localStorage.setItem('token', res.data.token)
+        setMessage(res.data.message)
+        redirectToArticles()
+      })
+      .catch(err => {
+        const responseMessage = err?.response?.data?.message
+        setMessage(responseMessage || `Somethin' horrible logging in: ${err.message}`)
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
+  }
 
-    if (res.status === 200) {
-      localStorage.setItem("token", res.data.token);
-      setMessage(res.data.message);
-      // setSpinnerOn(false);
-      navigate("/articles");
-      // const message = `Here are your articles, ${username}!`;
-      // setMessage(message);
-    } else {
-      setMessage(res.data.message);
-      setSpinnerOn(false);
-    }
-  };
 
   const postArticle = async (article) => {
     // ✨ implement
