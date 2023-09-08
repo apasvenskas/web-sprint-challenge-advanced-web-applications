@@ -6,7 +6,6 @@ import axiosWithAuth from '../axios';
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
    const {
-    // articles = [],
     articles,
     getArticles,
     setCurrentArticleId,
@@ -14,6 +13,8 @@ export default function Articles(props) {
  } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
+
+
   const token = localStorage.getItem('token')||props.token
   
   const navigate = useNavigate()

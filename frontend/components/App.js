@@ -71,7 +71,7 @@ export default function App() {
       .finally(() => {
         setSpinnerOn(false)
       })
-      console.log('1', token); 
+      console.log('1', token)
   }
 
 
@@ -97,6 +97,7 @@ export default function App() {
       .finally(() => {
         setSpinnerOn(false)
       })
+   
   }
 
 
@@ -105,31 +106,53 @@ export default function App() {
     // The flow is very similar to the `getArticles` function.
     // You'll know what to do! Use log statements or breakpoints
     // to inspect the response from the server.
-    const axios = axiosWithAuth();
-    try {
-      const response = await axios.post(`http://localhost:9000/api/articles`, article);
-      if (response.status === 201) {
-        return response.data;
-      } else {
-        throw new Error(`Unexpected status code: ${response.data}`);
-      }
-    } catch (error) {
-      console.log(error);
-      if (error.response && error.response.status === 401) {
-        redirectToLogin();
-      } else {
-        return error.message;
-      }
-    }
+    setSpinnerOn(true)
+    const token = localStorage.getItem('token')
+    setMessage('')
+    axios.post(articlesUrl, article, {
+      headers: {
+        Authorization: token
+      } 
+    })
+      .then(res => {
+        setMessage(res.data.message)
+        setArticles(res.data.articles)
+      })
+      .catch(err => {
+        setMessage(err?.response?.data?.message || 'Something bad happened')
+        if (err.response.status == 401) {
+          redirectToLogin()
+        }
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
+      console.log('post', token)
   };
 
   const updateArticle = ({ article_id, article }) => {
     // ✨ implement
     // You got this!
+    axios.put(`/articles/http://localhost:9000/api/articles/:article_id`, article)
+    .then(res => {
+      setArticles(res.data.articles)
+      setCurrentArticleId(res.data.currentArticleId)
+    })
+    .catch(err => {
+      console.log(err);
+    })
   };
 
   const deleteArticle = (article_id) => {
     // ✨ implement
+    axios.delete(`/articles/http://localhost:9000/api/articles/:article_id`, article_id)
+    .then(res => {
+      setArticles(res.data.article)
+      setCurrentArticleId(res.data.currentArticleId)
+    })
+    .catch(err => {
+      console.log(err);
+    })
   };
 
   return (
@@ -161,6 +184,7 @@ export default function App() {
               <>
                 <ArticleForm
                   article={articles}
+                  setArticles={setArticles}
                   updateArticle={updateArticle}
                   deleteArticle={deleteArticle}
                   setCurrentArticleId={setCurrentArticleId}
@@ -168,6 +192,8 @@ export default function App() {
                   postArticle={postArticle}
                 />
                 <Articles
+                  articles={articles}
+                  setArticles={setArticles}
                   getArticles={getArticles}
                   deleteArticle={deleteArticle}
                   updateArticle={updateArticle}
