@@ -7,9 +7,11 @@ export default function Articles(props) {
   // ✨ where are my props? Destructure them here
    const {
     articles,
+    setArticles, 
     getArticles,
     setCurrentArticleId,
     currentArticleId,
+    deleteArticle,
  } = props
   // ✨ implement conditional logic: if no token exists
   // we should render a Navigate to login screen (React Router v.6)
@@ -28,25 +30,42 @@ export default function Articles(props) {
     getArticles()
   }, [])
 
+  // const [Loading, setLoading] = useState(false);
+  // useEffect(() => {
+  //   // ✨ grab the articles here, on first render only
+  //   setLoading(true);
+  //   getArticles()
+  //     .then((res) => {
+  //       setArticles(res.data);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setLoading(false)
+  //     })
+  // }, [])
+
   const updateArticle = (articleId) => {
     setCurrentArticleId(articleId)
     navigate('/edit-article')
   }
 
-  const deleteArticle = (articleId) => {
-    axiosWithAuth()
-    .delete(`/articles/${articleId}`)
-    .then(() => {
-      getArticles()
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+  
+
+  // const deleteArticle = (articleId) => {
+  //   axiosWithAuth()
+  //   .delete(`/articles/${articleId}`)
+  //   .then(() => {
+  //     getArticles()
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
+  // }
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
-    // and use the articles prop to generate articles
+
     <div className="articles">
       <h2>Articles</h2>
       {articles?.length > 0 ? (
@@ -59,8 +78,8 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button disabled={currentArticleId !== art.article_id} onClick={updateArticle}>Edit</button>
-                  <button disabled={currentArticleId !== art.article_id} onClick={deleteArticle}>Delete</button>
+                  <button  onClick={updateArticle}>Edit</button>
+                  <button  onClick={() => deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>
             )}
