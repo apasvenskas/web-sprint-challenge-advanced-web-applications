@@ -155,6 +155,7 @@ export default function App() {
     .then(res => {
       setArticles(articles.filter(article => article.id !== article_id));
       setCurrentArticleId(res.data.currentArticleId)
+      window.location.reload();
       
     })
     .catch(err => {

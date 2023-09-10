@@ -50,18 +50,7 @@ export default function Articles(props) {
     navigate('/edit-article')
   }
 
-  
 
-  // const deleteArticle = (articleId) => {
-  //   axiosWithAuth()
-  //   .delete(`/articles/${articleId}`)
-  //   .then(() => {
-  //     getArticles()
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //   })
-  // }
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions
