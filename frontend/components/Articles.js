@@ -31,21 +31,20 @@ export default function Articles(props) {
     getArticles()
   }, [])
 
-  useEffect(() => {
-    axios.get(`http://localhost:9000/api/articles/${currentArticleId}`)
-    .then(res => {
-      setArticles(res.data.articles); 
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }, [currentArticleId])
+  // useEffect(() => {
+  //   axios.get(`http://localhost:9000/api/articles/${currentArticleId}`)
+  //   .then(res => {
+  //     setArticles(res.data.articles); 
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   })
+  // }, [currentArticleId])
 
 
 
   const updateArticle = (articleId) => {
     setCurrentArticleId(articleId)
-    navigate('/edit-article')
   }
 
 
@@ -65,7 +64,7 @@ export default function Articles(props) {
                   <p>Topic: {art.topic}</p>
                 </div>
                 <div>
-                  <button  onClick={updateArticle}>Edit</button>
+                  <button  onClick={() => updateArticle(art.article_id)}>Edit</button>
                   <button  onClick={() => deleteArticle(art.article_id)}>Delete</button>
                 </div>
               </div>

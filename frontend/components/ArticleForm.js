@@ -20,6 +20,10 @@ export default function ArticleForm(props) {
         topic: currentArticle.topic,
       })
     }
+    else {
+      setValues(initialFormValues)
+    }
+    console.log('currentArticle', currentArticle)
   }, [currentArticle])
 
   const onChange = evt => {
@@ -37,6 +41,8 @@ export default function ArticleForm(props) {
     } else {
       updateArticle(currentArticle.article_id, values)
     }
+    setCurrentArticleId()
+    setValues(initialFormValues)
   }
 
   const isDisabled = () => {

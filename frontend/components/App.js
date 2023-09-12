@@ -99,13 +99,13 @@ export default function App() {
       })
   }
 
-  const defaultValues = {
-    title: "",
-    text: "",
-    topic: ""
-  };
+  // const defaultValues = {
+  //   title: "",
+  //   text: "",
+  //   topic: ""
+  // };
 
-  const {reset} = useForm({defaultValues})
+  // const {reset} = useForm({defaultValues})
 
   const postArticle = async (article) => {
     // ✨ implement
@@ -122,9 +122,10 @@ export default function App() {
     })
       .then(res => {
         setMessage(res.data.message)
-        setArticles(res.data.articles)
-        setArticles([...articles, article]);
-        reset(defaultValues)
+        setArticles(articles => {
+          return articles.concat(res.data.article)
+        })
+        // reset(defaultValues)
       })
       .catch(err => {
         setMessage(err?.response?.data?.message || 'Something bad happened')
@@ -144,7 +145,11 @@ export default function App() {
     axios.put(`/articles/http://localhost:9000/api/articles/:article_id`, article)
     .then(res => {
       setArticles(res.data.articles)
-      setCurrentArticleId(res.data.currentArticleId)
+      setArticles(articles => {
+        return articles.map(art => {
+          return art.article_id === article_id ? res.data.article : art
+        })
+      })
     })
     .catch(err => {
       console.log(err);
@@ -162,9 +167,14 @@ export default function App() {
     })
     .then(res => {
       // setArticles(articles.filter(article => article.id !== article_id));
-      setCurrentArticleId(res.data.currentArticleId)
+      // setCurrentArticleId(res.data.currentArticleId)
       // window.location.reload();
-      setMessage(`Article ${article_id} was deleted, ${username}!`);
+      setMessage(res.data.message);
+      setArticles(articles => {
+        return articles.filter(art => {
+          return art.article_id != article_id
+        })
+      })
     })
     .catch(err => {
       console.log(err);
@@ -210,7 +220,7 @@ export default function App() {
                   updateArticle={updateArticle}
                   deleteArticle={deleteArticle}
                   setCurrentArticleId={setCurrentArticleId}
-                  currentArticle={currentArticleId}
+                  currentArticle={articles.find(art => art.article_id == currentArticleId)}
                   postArticle={postArticle}
                 />
                 <Articles
