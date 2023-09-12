@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import PT from 'prop-types';
+import axios from 'axios';
 import axiosWithAuth from '../axios';
 
 export default function Articles(props) {
@@ -30,20 +31,17 @@ export default function Articles(props) {
     getArticles()
   }, [])
 
-  // const [Loading, setLoading] = useState(false);
-  // useEffect(() => {
-  //   // ✨ grab the articles here, on first render only
-  //   setLoading(true);
-  //   getArticles()
-  //     .then((res) => {
-  //       setArticles(res.data);
-  //       setLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setLoading(false)
-  //     })
-  // }, [])
+  useEffect(() => {
+    axios.get(`http://localhost:9000/api/articles/${currentArticleId}`)
+    .then(res => {
+      setArticles(res.data.articles); 
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }, [currentArticleId])
+
+
 
   const updateArticle = (articleId) => {
     setCurrentArticleId(articleId)
@@ -60,7 +58,7 @@ export default function Articles(props) {
       {articles?.length > 0 ? (
         articles.map((art) => {
             return (
-              <div className="article" key={art.articleId}>
+              <div className="article" key={art.article_Id}>
                 <div>
                   <h3>{art.title}</h3>
                   <p>{art.text}</p>

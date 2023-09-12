@@ -6,7 +6,7 @@ import Message from "./Message";
 import ArticleForm from "./ArticleForm";
 import Spinner from "./Spinner";
 import axios from "axios";
-import axiosWithAuth from "../axios";
+import {useForm} from "react-hook-form"
 
 
 const articlesUrl = "http://localhost:9000/api/articles";
@@ -97,9 +97,15 @@ export default function App() {
       .finally(() => {
         setSpinnerOn(false)
       })
-   
   }
 
+  const defaultValues = {
+    title: "",
+    text: "",
+    topic: ""
+  };
+
+  const {reset} = useForm({defaultValues})
 
   const postArticle = async (article) => {
     // ✨ implement
@@ -118,6 +124,7 @@ export default function App() {
         setMessage(res.data.message)
         setArticles(res.data.articles)
         setArticles([...articles, article]);
+        reset(defaultValues)
       })
       .catch(err => {
         setMessage(err?.response?.data?.message || 'Something bad happened')
@@ -147,22 +154,28 @@ export default function App() {
   const deleteArticle = (article_id) => {
     // ✨ implement
     const token = localStorage.getItem('token')
+    setSpinnerOn(true)
     axios.delete(`http://localhost:9000/api/articles/${article_id}`, {
       headers: {
         Authorization: token
       }
     })
     .then(res => {
-      setArticles(articles.filter(article => article.id !== article_id));
+      // setArticles(articles.filter(article => article.id !== article_id));
       setCurrentArticleId(res.data.currentArticleId)
-      window.location.reload();
-      
+      // window.location.reload();
+      setMessage(`Article ${article_id} was deleted, ${username}!`);
     })
     .catch(err => {
       console.log(err);
     })
+    .finally(() => {
+      setSpinnerOn(false)
+    })
     console.log('delete', token)
   };
+
+
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
