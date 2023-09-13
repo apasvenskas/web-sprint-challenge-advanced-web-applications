@@ -6,7 +6,6 @@ import Message from "./Message";
 import ArticleForm from "./ArticleForm";
 import Spinner from "./Spinner";
 import axios from "axios";
-import {useForm} from "react-hook-form"
 
 
 const articlesUrl = "http://localhost:9000/api/articles";
@@ -139,10 +138,19 @@ export default function App() {
       console.log('post', token)
   };
 
-  const updateArticle = ({ article_id, article }) => {
+  const updateArticle = ({article_id, article}) => {
+    const token = localStorage.getItem('token')
+    article_id = Number(article_id);
     // ✨ implement
     // You got this!
-    axios.put(`/articles/http://localhost:9000/api/articles/:article_id`, article)
+    if (typeof article_id !== "number") {
+      throw new Error("article_id is not a number");
+    }
+    axios.put(`http://localhost:9000/api/articles/${article_id}`, article, {
+      headers: {
+        Authorization: token
+      }
+    })
     .then(res => {
       setArticles(res.data.articles)
       setArticles(articles => {
@@ -150,10 +158,13 @@ export default function App() {
           return art.article_id === article_id ? res.data.article : art
         })
       })
+      setMessage(res.data.message);
     })
     .catch(err => {
       console.log(err);
     })
+    console.log('tokenUpdate', token)
+    console.log('article_id', article_id)
   };
 
   const deleteArticle = (article_id) => {
@@ -220,6 +231,7 @@ export default function App() {
                   updateArticle={updateArticle}
                   deleteArticle={deleteArticle}
                   setCurrentArticleId={setCurrentArticleId}
+                  currentArticleId={currentArticleId}
                   currentArticle={articles.find(art => art.article_id == currentArticleId)}
                   postArticle={postArticle}
                 />

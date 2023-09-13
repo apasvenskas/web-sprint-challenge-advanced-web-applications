@@ -34,7 +34,7 @@ export default function Articles(props) {
   // useEffect(() => {
   //   axios.get(`http://localhost:9000/api/articles/${currentArticleId}`)
   //   .then(res => {
-  //     setArticles(res.data.articles); 
+  //     setArticles(res.data.articles); m
   //   })
   //   .catch(err => {
   //     console.log(err);
