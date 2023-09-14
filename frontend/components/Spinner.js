@@ -9,6 +9,7 @@ const rotation = keyframes`
 
 const opacity = keyframes`
   from { opacity: 0.2; }
+  
   to { opacity: 1; }
 `
 

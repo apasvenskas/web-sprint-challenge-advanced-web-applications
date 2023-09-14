@@ -23,7 +23,7 @@ export default function ArticleForm(props) {
     else {
       setValues(initialFormValues)
     }
-    console.log('currentArticle', currentArticle)
+    // console.log('currentArticle', currentArticle)
   }, [currentArticle])
 
   const onChange = evt => {

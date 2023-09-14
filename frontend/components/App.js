@@ -7,7 +7,6 @@ import ArticleForm from "./ArticleForm";
 import Spinner from "./Spinner";
 import axios from "axios";
 
-
 const articlesUrl = "http://localhost:9000/api/articles";
 const loginUrl = "http://localhost:9000/api/login";
 
@@ -49,30 +48,30 @@ export default function App() {
     // If something goes wrong, check the status of the response:
     // if it's a 401 the token might have gone bad, and we should redirect to login.
     // Don't forget to turn off the spinner!
-    setSpinnerOn(true)
-    const token = localStorage.getItem('token')
-    setMessage('')
-    axios.get(articlesUrl, {
-      headers: {
-        Authorization: token
-      } 
-    })
-      .then(res => {
-        setMessage(res.data.message)
-        setArticles(res.data.articles)
+    setSpinnerOn(true);
+    const token = localStorage.getItem("token");
+    setMessage("");
+    axios
+      .get(articlesUrl, {
+        headers: {
+          Authorization: token,
+        },
       })
-      .catch(err => {
-        setMessage(err?.response?.data?.message || 'Something bad happened')
+      .then((res) => {
+        setMessage(res.data.message);
+        setArticles(res.data.articles);
+      })
+      .catch((err) => {
+        setMessage(err?.response?.data?.message || "Something bad happened");
         if (err.response.status == 401) {
-          redirectToLogin()
+          redirectToLogin();
         }
       })
       .finally(() => {
-        setSpinnerOn(false)
-      })
-      console.log('1', token)
-  }
-
+        setSpinnerOn(false);
+      });
+    // console.log('1', token)
+  };
 
   const login = async ({ username, password }) => {
     // ✨ implement
@@ -81,121 +80,111 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
-    setSpinnerOn(true)
-    setMessage('')
-    axios.post(loginUrl, { username, password })
-      .then(res => {
-        window.localStorage.setItem('token', res.data.token)
-        setMessage(res.data.message)
-        redirectToArticles()
+    // setSpinnerOn(true)
+    setMessage("");
+    axios
+      .post(loginUrl, { username, password })
+      .then((res) => {
+        window.localStorage.setItem("token", res.data.token);
+        setMessage(res.data.message);
+        redirectToArticles();
       })
-      .catch(err => {
-        const responseMessage = err?.response?.data?.message
-        setMessage(responseMessage || `Somethin' horrible logging in: ${err.message}`)
+      .catch((err) => {
+        const responseMessage = err?.response?.data?.message;
+        setMessage(
+          responseMessage || `Somethin' horrible logging in: ${err.message}`
+        );
       })
       .finally(() => {
-        setSpinnerOn(false)
-      })
-  }
-
-  // const defaultValues = {
-  //   title: "",
-  //   text: "",
-  //   topic: ""
-  // };
-
-  // const {reset} = useForm({defaultValues})
+        // setSpinnerOn(false)
+      });
+    // console.log("spinner", setSpinnerOn);
+  };
 
   const postArticle = async (article) => {
     // ✨ implement
-    // The flow is very similar to the `getArticles` function.
-    // You'll know what to do! Use log statements or breakpoints
-    // to inspect the response from the server.
-    setSpinnerOn(true)
-    const token = localStorage.getItem('token')
-    setMessage('')
-    axios.post(articlesUrl, article, {
-      headers: {
-        Authorization: token
-      } 
-    })
-      .then(res => {
-        setMessage(res.data.message)
-        setArticles(articles => {
-          return articles.concat(res.data.article)
-        })
-        // reset(defaultValues)
+
+    setSpinnerOn(true);
+    const token = localStorage.getItem("token");
+    setMessage("");
+    axios
+      .post(articlesUrl, article, {
+        headers: {
+          Authorization: token,
+        },
       })
-      .catch(err => {
-        setMessage(err?.response?.data?.message || 'Something bad happened')
+      .then((res) => {
+        setMessage(res.data.message);
+        setArticles((articles) => {
+          return articles.concat(res.data.article);
+        });
+      })
+      .catch((err) => {
+        setMessage(err?.response?.data?.message || "Something bad happened");
         if (err.response.status == 401) {
-          redirectToLogin()
+          redirectToLogin();
         }
       })
       .finally(() => {
-        setSpinnerOn(false)
-      })
-      console.log('post', token)
+        setSpinnerOn(false);
+      });
+    console.log("post", token);
   };
 
-  const updateArticle = ({article_id, article}) => {
-    const token = localStorage.getItem('token')
+  const updateArticle = ({ article_id, article }) => {
+    const token = localStorage.getItem("token");
     article_id = Number(article_id);
     // ✨ implement
     // You got this!
     if (typeof article_id !== "number") {
       throw new Error("article_id is not a number");
     }
-    axios.put(`http://localhost:9000/api/articles/${article_id}`, article, {
-      headers: {
-        Authorization: token
-      }
-    })
-    .then(res => {
-      setArticles(articles => {
-        return articles.map(art => {
-          return art.article_id === article_id ? res.data.article : art
-        })
+    axios
+      .put(`http://localhost:9000/api/articles/${article_id}`, article, {
+        headers: {
+          Authorization: token,
+        },
       })
-      setMessage(res.data.message);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    // console.log('tokenUpdate', token)
-    console.log('article_id', article_id)
+      .then((res) => {
+        setArticles((articles) => {
+          return articles.map((art) => {
+            return art.article_id === article_id ? res.data.article : art;
+          });
+        });
+        setMessage(res.data.message);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    console.log("article_id", article_id);
   };
 
   const deleteArticle = (article_id) => {
     // ✨ implement
-    const token = localStorage.getItem('token')
-    setSpinnerOn(true)
-    axios.delete(`http://localhost:9000/api/articles/${article_id}`, {
-      headers: {
-        Authorization: token
-      }
-    })
-    .then(res => {
-      // setArticles(articles.filter(article => article.id !== article_id));
-      // setCurrentArticleId(res.data.currentArticleId)
-      // window.location.reload();
-      setMessage(res.data.message);
-      setArticles(articles => {
-        return articles.filter(art => {
-          return art.article_id != article_id
-        })
+    const token = localStorage.getItem("token");
+    setSpinnerOn(true);
+    axios
+      .delete(`http://localhost:9000/api/articles/${article_id}`, {
+        headers: {
+          Authorization: token,
+        },
       })
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .finally(() => {
-      setSpinnerOn(false)
-    })
-    console.log('delete', token)
+      .then((res) => {
+        setMessage(res.data.message);
+        setArticles((articles) => {
+          return articles.filter((art) => {
+            return art.article_id != article_id;
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setSpinnerOn(false);
+      });
+    console.log("delete", token);
   };
-
-
 
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
@@ -218,8 +207,28 @@ export default function App() {
           </NavLink>
         </nav>
         <Routes>
-          <Route path="/" element={<LoginForm login={login} />} />
-          <Route path="login" element={<LoginForm login={login} />} />
+          <Route
+            path="/"
+            element={
+              <LoginForm
+                login={login}
+                spinnerOn={spinnerOn}
+                setSpinnerOn={setSpinnerOn}
+                setMessage={setMessage}
+              />
+            }
+          />
+          <Route
+            path="login"
+            element={
+              <LoginForm
+                login={login}
+                spinnerOn={spinnerOn}
+                setSpinnerOn={setSpinnerOn}
+                setMessage={setMessage}
+              />
+            }
+          />
           <Route
             path="articles"
             element={
@@ -231,7 +240,9 @@ export default function App() {
                   deleteArticle={deleteArticle}
                   setCurrentArticleId={setCurrentArticleId}
                   currentArticleId={currentArticleId}
-                  currentArticle={articles.find(art => art.article_id == currentArticleId)}
+                  currentArticle={articles.find(
+                    (art) => art.article_id == currentArticleId
+                  )}
                   postArticle={postArticle}
                 />
                 <Articles

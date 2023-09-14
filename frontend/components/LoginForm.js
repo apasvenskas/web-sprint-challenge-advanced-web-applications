@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PT from 'prop-types'
-import Message from './Message'
-import Spinner from './Spinner'
+
 
 
 const initialFormValues = {
@@ -12,8 +11,7 @@ const initialFormValues = {
 export default function LoginForm(props) {
   // ✨ where are my props? Destructure them here
   const [values, setValues] = useState(initialFormValues)
-  const {login} = props;
-  const {message, spinnerOn} = props
+  const {message, spinnerOn, setSpinnerOn} = props
  
   const onChange = evt => {
     const { id, value } = evt.target;
@@ -22,10 +20,16 @@ export default function LoginForm(props) {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    setSpinnerOn(true)
     const {username, password} =values;
     if (username.length >=3 && password.length >= 8){
       props.login({username, password});
     }
+    setTimeout(() => {
+      setSpinnerOn(false)
+    })
+    
+    console.log('setSpinner', spinnerOn)
   }
 
   const isDisabled = () => {
@@ -42,7 +46,7 @@ export default function LoginForm(props) {
     <form id="loginForm" onSubmit={onSubmit}>
       <h2>Login</h2>
       {message && <p>{message}</p>}
-      {spinnerOn && <Spinner on={spinnerOn} />}
+      {spinnerOn && <spinnerOn on={spinnerOn} />}
       <input
         maxLength={20}
         value={values.username}
