@@ -152,7 +152,6 @@ export default function App() {
       }
     })
     .then(res => {
-      setArticles(res.data.articles)
       setArticles(articles => {
         return articles.map(art => {
           return art.article_id === article_id ? res.data.article : art
@@ -163,7 +162,7 @@ export default function App() {
     .catch(err => {
       console.log(err);
     })
-    console.log('tokenUpdate', token)
+    // console.log('tokenUpdate', token)
     console.log('article_id', article_id)
   };
 

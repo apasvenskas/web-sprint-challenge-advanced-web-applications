@@ -42,7 +42,7 @@ export default function LoginForm(props) {
     <form id="loginForm" onSubmit={onSubmit}>
       <h2>Login</h2>
       {message && <p>{message}</p>}
-      {spinnerOn && <p>Loading...</p>}
+      {spinnerOn && <Spinner on={spinnerOn} />}
       <input
         maxLength={20}
         value={values.username}
