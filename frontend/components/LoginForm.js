@@ -20,15 +20,10 @@ export default function LoginForm(props) {
 
   const onSubmit = (e) => {
     e.preventDefault()
-    setSpinnerOn(true)
     const {username, password} =values;
     if (username.length >=3 && password.length >= 8){
       props.login({username, password});
     }
-    setTimeout(() => {
-      setSpinnerOn(false)
-    })
-    
     console.log('setSpinner', spinnerOn)
   }
 
@@ -46,7 +41,7 @@ export default function LoginForm(props) {
     <form id="loginForm" onSubmit={onSubmit}>
       <h2>Login</h2>
       {message && <p>{message}</p>}
-      {spinnerOn && <spinnerOn on={spinnerOn} />}
+      {/* {spinnerOn && <Spinner on={spinnerOn} />} */}
       <input
         maxLength={20}
         value={values.username}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
 import Articles from "./Articles";
 import LoginForm from "./LoginForm";
@@ -25,6 +25,14 @@ export default function App() {
   const redirectToArticles = () => {
     navigate("/articles");
   };
+
+  // added use effect in hopes of getting spinner to work. 
+  useEffect(() => {
+    setSpinnerOn(true);
+    // ...
+    setSpinnerOn(false);
+  }, [spinnerOn]);
+
 
   const logout = () => {
     // ✨ implement
@@ -70,7 +78,6 @@ export default function App() {
       .finally(() => {
         setSpinnerOn(false);
       });
-    // console.log('1', token)
   };
 
   const login = async ({ username, password }) => {
@@ -80,8 +87,10 @@ export default function App() {
     // On success, we should set the token to local storage in a 'token' key,
     // put the server success message in its proper state, and redirect
     // to the Articles screen. Don't forget to turn off the spinner!
-    // setSpinnerOn(true)
+    console.log('Loging in')
+    setSpinnerOn(true)
     setMessage("");
+    console.log('spinnerOn', spinnerOn)
     axios
       .post(loginUrl, { username, password })
       .then((res) => {
@@ -96,9 +105,11 @@ export default function App() {
         );
       })
       .finally(() => {
-        // setSpinnerOn(false)
+        setSpinnerOn(false)
+        console.log('login complete')
       });
-    // console.log("spinner", setSpinnerOn);
+
+    console.log("spinner", spinnerOn);
   };
 
   const postArticle = async (article) => {
@@ -189,12 +200,14 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-      <Spinner spinnerOn={spinnerOn} />
+     
       <Message message={message} />
       <button id="logout" onClick={logout}>
         Logout from app
       </button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}>
+      {spinnerOn ? <Spinner spinnerOn={true} /> : <Spinner spinnerOn={false} />}
+        <Spinner spinnerOn={spinnerOn} />
         {" "}
         {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
@@ -209,25 +222,11 @@ export default function App() {
         <Routes>
           <Route
             path="/"
-            element={
-              <LoginForm
-                login={login}
-                spinnerOn={spinnerOn}
-                setSpinnerOn={setSpinnerOn}
-                setMessage={setMessage}
-              />
-            }
+            element={<LoginForm login={login} spinnerOn={spinnerOn} setSpinnerOn={setSpinnerOn} />}
           />
           <Route
             path="login"
-            element={
-              <LoginForm
-                login={login}
-                spinnerOn={spinnerOn}
-                setSpinnerOn={setSpinnerOn}
-                setMessage={setMessage}
-              />
-            }
+            element={<LoginForm login={login} spinnerOn={spinnerOn} setSpinnerOn={setSpinnerOn} />}
           />
           <Route
             path="articles"
