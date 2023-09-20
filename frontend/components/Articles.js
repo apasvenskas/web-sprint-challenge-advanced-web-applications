@@ -8,7 +8,6 @@ export default function Articles(props) {
   // ✨ where are my props? Destructure them here
    const {
     articles,
-    setArticles, 
     getArticles,
     setCurrentArticleId,
     currentArticleId,
