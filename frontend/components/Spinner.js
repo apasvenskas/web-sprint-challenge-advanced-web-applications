@@ -9,19 +9,16 @@ const rotation = keyframes`
 
 const opacity = keyframes`
   from { opacity: 0.2; }
-  
   to { opacity: 1; }
 `
 
-const StyledSpinner = styled.div(props => `
+const StyledSpinner = styled.div `
 animation: ${opacity} 1s infinite linear;
 h3 {
   transform-origin: center center;
   animation: ${rotation} 1s infinite linear;
 }
-`)
-
-  
+`
 
 
 export default function Spinner({ on }) {

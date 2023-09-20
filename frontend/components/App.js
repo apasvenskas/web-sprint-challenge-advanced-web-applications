@@ -200,15 +200,14 @@ export default function App() {
   return (
     // ✨ fix the JSX: `Spinner`, `Message`, `LoginForm`, `ArticleForm` and `Articles` expect props ❗
     <>
-     
+       {/* {spinnerOn ? <Spinner spinnerOn={true} /> : <Spinner spinnerOn={false} />} */}
+      <Spinner on={spinnerOn} />
       <Message message={message} />
       <button id="logout" onClick={logout}>
         Logout from app
       </button>
       <div id="wrapper" style={{ opacity: spinnerOn ? "0.25" : "1" }}>
-      {spinnerOn ? <Spinner spinnerOn={true} /> : <Spinner spinnerOn={false} />}
-        <Spinner spinnerOn={spinnerOn} />
-        {" "}
+        
         {/* <-- do not change this line */}
         <h1>Advanced Web Applications</h1>
         <nav>
@@ -222,11 +221,11 @@ export default function App() {
         <Routes>
           <Route
             path="/"
-            element={<LoginForm login={login} spinnerOn={spinnerOn} setSpinnerOn={setSpinnerOn} />}
+            element={<LoginForm login={login} />}
           />
           <Route
             path="login"
-            element={<LoginForm login={login} spinnerOn={spinnerOn} setSpinnerOn={setSpinnerOn} />}
+            element={<LoginForm login={login} />}
           />
           <Route
             path="articles"
@@ -246,7 +245,6 @@ export default function App() {
                 />
                 <Articles
                   articles={articles}
-                  setArticles={setArticles}
                   getArticles={getArticles}
                   deleteArticle={deleteArticle}
                   updateArticle={updateArticle}
