@@ -1,8 +1,3 @@
-
-
-
-
-
 import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import PT from 'prop-types'
@@ -29,7 +24,7 @@ h3 {
 export default function Spinner({ on }) {
   if (!on) return null
   return (
-    <StyledSpinner id="spinner">
+    <StyledSpinner id="spinner" data-testid="spinner">
       <h3>&nbsp;.</h3>&nbsp;&nbsp;&nbsp;Please wait...
     </StyledSpinner>
   )

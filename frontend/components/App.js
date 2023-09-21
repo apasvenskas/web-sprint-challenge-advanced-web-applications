@@ -26,9 +26,6 @@ export default function App() {
     navigate("/articles");
   };
 
-
-
-
   const logout = () => {
     // ✨ implement
     // If a token is in local storage it should be removed,
@@ -138,6 +135,7 @@ export default function App() {
   };
 
   const updateArticle = ({ article_id, article }) => {
+    setSpinnerOn(true)
     const token = localStorage.getItem("token");
     article_id = Number(article_id);
     // ✨ implement
@@ -161,7 +159,10 @@ export default function App() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      })
+      .finally(() => {
+        setSpinnerOn(false)
+      })
     console.log("article_id", article_id);
   };
 
