@@ -26,12 +26,7 @@ export default function App() {
     navigate("/articles");
   };
 
-  // added use effect in hopes of getting spinner to work. 
-  useEffect(() => {
-    setSpinnerOn(true);
-    // ...
-    setSpinnerOn(false);
-  }, [spinnerOn]);
+
 
 
   const logout = () => {

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import PT from 'prop-types';
-import axios from 'axios';
-import axiosWithAuth from '../axios';
 
 export default function Articles(props) {
   // ✨ where are my props? Destructure them here
@@ -30,23 +28,10 @@ export default function Articles(props) {
     getArticles()
   }, [])
 
-  // useEffect(() => {
-  //   axios.get(`http://localhost:9000/api/articles/${currentArticleId}`)
-  //   .then(res => {
-  //     setArticles(res.data.articles); m
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   })
-  // }, [currentArticleId])
-
-
 
   const updateArticle = (articleId) => {
     setCurrentArticleId(articleId)
   }
-
-
 
   return (
     // ✨ fix the JSX: replace `Function.prototype` with actual functions

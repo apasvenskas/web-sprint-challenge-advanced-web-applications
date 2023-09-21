@@ -11,7 +11,7 @@ const initialFormValues = {
 export default function LoginForm(props) {
   // ✨ where are my props? Destructure them here
   const [values, setValues] = useState(initialFormValues)
-  const {message, spinnerOn, setSpinnerOn} = props
+  const {message } = props
  
   const onChange = evt => {
     const { id, value } = evt.target;
@@ -24,7 +24,6 @@ export default function LoginForm(props) {
     if (username.length >=3 && password.length >= 8){
       props.login({username, password});
     }
-    console.log('setSpinner', spinnerOn)
   }
 
   const isDisabled = () => {
@@ -41,7 +40,6 @@ export default function LoginForm(props) {
     <form id="loginForm" onSubmit={onSubmit}>
       <h2>Login</h2>
       {message && <p>{message}</p>}
-      {/* {spinnerOn && <Spinner on={spinnerOn} />} */}
       <input
         maxLength={20}
         value={values.username}
